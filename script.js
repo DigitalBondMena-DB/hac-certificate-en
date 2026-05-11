@@ -230,31 +230,36 @@
         if (dropdown) dropdown.style.visibility = "hidden";
 
         const opt = {
-          margin: [20, 0, 20, 0], // Top, Left, Bottom, Right margins
+          margin: [10, 0, 0, 0], // Top, Left, Bottom, Right margins
           filename: "hac-certificate.pdf",
           image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { 
-            scale: 3, 
-            useCORS: true, 
-            letterRendering: true,
-            backgroundColor: "#ffffff"
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
           },
-          jsPDF: { 
-            unit: "mm", 
-            format: "a4", 
-            orientation: "portrait" 
-          }
+          jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "landscape",
+          },
         };
-
+        await document.fonts.ready;
         // Generate PDF
-        await html2pdf().set(opt).from(certificate).toPdf().get('pdf').then((pdf) => {
-          const totalPages = pdf.internal.getNumberOfPages();
-          for (let i = 1; i <= totalPages; i++) {
-            pdf.setPage(i);
-            // This is a common trick to ensure centering if needed, 
-            // but html2pdf handles auto-scaling well with margins.
-          }
-        }).save();
+        await html2pdf()
+          .set(opt)
+          .from(certificate)
+          .toPdf()
+          .get("pdf")
+          .then((pdf) => {
+            const totalPages = pdf.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+              pdf.setPage(i);
+              // This is a common trick to ensure centering if needed,
+              // but html2pdf handles auto-scaling well with margins.
+            }
+          })
+          .save();
 
         if (dropdown) dropdown.style.visibility = "visible";
 
